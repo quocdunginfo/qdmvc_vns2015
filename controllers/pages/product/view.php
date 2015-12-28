@@ -42,6 +42,15 @@ class Qdmvc_View_Product_Card extends Qdmvc_Layout_CardNavigate
                     'en-US' => 'Gen QR Code'
                 )
             ),
+            'btn_remove_ggm_embeded' => array(
+                'fn_name' => 'fn_remove_ggm_embeded',
+                'confirm' => true,
+                'label' => array(
+                    'vi-VN' => 'Gỡ mã nhúng Google Map',
+                    'en-US' => 'Remove Google Map'
+                )
+            ),
+
         ));
         return $obj;
     }

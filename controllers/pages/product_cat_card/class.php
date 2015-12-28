@@ -45,6 +45,12 @@ class Qdmvc_Page_ProductCat_Card extends Qdmvc_Page_Root
                     'active' => array(
                         'Order' => 1500,
                     ),
+                    'longitude' => array(
+                        'Order' => 1600,
+                    ),
+                    'latitude' => array(
+                        'Order' => 1700,
+                    ),
                 )
             ),
 

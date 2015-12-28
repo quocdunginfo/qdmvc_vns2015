@@ -27,11 +27,11 @@ class Qdmvc_Page_SetupOther extends Qdmvc_Page_RootSetup
                 'Name' => 'General',
                 'Fields' => array(
                     'id' => array(
-                        'Order' => 10,
+                        'Order' => 100,
                         'Hidden' => true
                     ),
-                    'pbhanh_tpl' => array(
-                        'Order' => 20,
+                    'thongtinlh_tpl' => array(
+                        'Order' => 200,
                     ),
                 )
             )

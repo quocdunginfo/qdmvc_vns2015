@@ -4,9 +4,7 @@ class QdProduct extends QdRoot
 {
     static $table_name = 'mpd_product';
     public static $STOCK_DF = '';
-    public static $STOCK_TAMHET = 'TAMHET';
-    public static $STOCK_SAPCO = 'SAPCO';
-    public static $STOCK_SAPHET = 'SAPHET';
+    public static $STOCK_FINISH = 'FINISH';
     public static $STOCK_NGUNG = 'NGUNG';
 
     public static function getFieldsConfig()
@@ -17,20 +15,20 @@ class QdProduct extends QdRoot
                 'DataType' => 'Text',
                 'FieldClass' => 'FlowField',
                 'Description' => array(
-                    'vi-VN' => sprintf(Qdmvc_Message::getMsg('fd_seometa_field_title'), 'chi tiết SP')
+                    'vi-VN' => sprintf(Qdmvc_Message::getMsg('fd_seometa_field_title'), 'chi tiết BDS')
                 )
             ),
             '_seo_description_preview' => array(
                 'DataType' => 'Text',
                 'FieldClass' => 'FlowField',
                 'Description' => array(
-                    'vi-VN' => sprintf(Qdmvc_Message::getMsg('fd_seometa_field_description'), 'chi tiết SP')
+                    'vi-VN' => sprintf(Qdmvc_Message::getMsg('fd_seometa_field_description'), 'chi tiết BDS')
                 )
             ),
             //SAMPLE FIELD CONFIG
             '_product_cat_name' => array(
                 'Name' => '_product_cat_name',
-                'Caption' => array('en-US' => 'Product Cat Name', 'vi-VN' => 'Tên loại SP'),
+                'Caption' => array('en-US' => 'Product Cat Name', 'vi-VN' => 'Vị trí BDS'),
                 'Description' => array(//'vi-VN' => 'Tên loại SP ứng với mã SP'
                 ),
                 'DataType' => 'Text',
@@ -59,7 +57,7 @@ class QdProduct extends QdRoot
             ),
             'product_cat_id' => array(
                 'Name' => 'product_cat_id',
-                'Caption' => array('en-US' => 'Product Cat ID', 'vi-VN' => 'Mã loại SP'),
+                'Caption' => array('en-US' => 'Product Cat ID', 'vi-VN' => 'Mã Vị trí BDS'),
                 'DataType' => 'Code',
                 'Numeric' => true,
                 'Description' => array(//'vi-VN' => sprintf('Mã SP')
@@ -112,12 +110,13 @@ class QdProduct extends QdRoot
                 'Caption' => array('vi-VN' => 'Tên SP'),
                 'Require' => true
             ),
+            /*
             'code' => array(
                 'Caption' => array('vi-VN' => 'Mã SP'),
                 'Description' => array(
-                    'vi-VN' => 'Mã SP hiển thị trên trang chi tiết SP'
+                    'vi-VN' => 'Mã BDS hiển thị trên trang chi tiết BDS'
                 ),
-            ),
+            ),*/
             'price' => array(
                 'Caption' => array('vi-VN' => 'Giá'),
             ),
@@ -125,13 +124,12 @@ class QdProduct extends QdRoot
                 'Caption' => array('vi-VN' => 'Mô tả'),
                 'DataType' => 'WYSIWYG',
                 'Description' => array(
-                    'vi-VN' => 'Tab thông tin thứ 1 của trang chi tiết SP'
+                    'vi-VN' => 'Thông tin mô tả phía dưới Hình đại diện, trang chi tiết BDS'
                 ),
                 'Require' => true
             ),
-
             'stock_status' => array(
-                'Caption' => array('vi-VN' => 'Tình trạng kho'),
+                'Caption' => array('vi-VN' => 'Tình trạng BDS'),
                 'DataType' => 'Option',
                 'Description' => array(
                     'vi-VN' => 'Đánh dấu tình trạng kho của SP'
@@ -140,17 +138,11 @@ class QdProduct extends QdRoot
                     static::$STOCK_DF => array(
                         'Caption' => array('en-US' => 'Default', 'vi-VN'=> 'Mặc định')
                     ),
-                    static::$STOCK_TAMHET => array(
-                        'Caption' => array('en-US' => 'TAMHET', 'vi-VN'=> 'Tạm hết hàng')
-                    ),
-                    static::$STOCK_SAPCO => array(
-                        'Caption' => array('en-US' => 'SAPCO', 'vi-VN'=> 'Sắp có hàng')
-                    ),
-                    static::$STOCK_SAPHET => array(
-                        'Caption' => array('en-US' => 'SAPHET', 'vi-VN'=> 'Sắp hết hàng')
+                    static::$STOCK_FINISH => array(
+                        'Caption' => array('en-US' => 'Finish', 'vi-VN'=> 'Đã hoàn tất')
                     ),
                     static::$STOCK_NGUNG => array(
-                        'Caption' => array('en-US' => 'NGUNG', 'vi-VN'=> 'Ngưng kinh doanh')
+                        'Caption' => array('en-US' => 'Stop', 'vi-VN'=> 'Ngưng giao dịch')
                     )
                 )
             ),
@@ -203,14 +195,14 @@ class QdProduct extends QdRoot
                 'DataType' => 'Decimal',
                 'Caption' => array('en-US' => 'Dien tich xay dung', 'vi-VN' => 'Diện tích xây dựng'),
                 'Description' => array(
-                    'vi-VN' => ''
+                    'vi-VN' => 'Hiển thị trên trang chi tiết BDS'
                 ),
             ),
             'dtsudung' => array(
                 'DataType' => 'Decimal',
                 'Caption' => array('en-US' => 'Dien tich su dung', 'vi-VN' => 'Diện tích sử dụng'),
                 'Description' => array(
-                    'vi-VN' => ''
+                    'vi-VN' => 'Hiển thị trên trang chi tiết BDS'
                 ),
             ),
             'phaply' => array(
@@ -220,11 +212,25 @@ class QdProduct extends QdRoot
                     'vi-VN' => 'Pháp lý'
                 ),
             ),
+            'thongtinlh' => array(
+                'DataType' => 'WYSIWYG',
+                'Caption' => array('en-US' => 'Contact Info', 'vi-VN' => 'Thông tin liên hệ'),
+                'Description' => array(
+                    'vi-VN' => 'Định nghĩa trong \'Cấu hình khác\'',
+                ),
+            ),
+            'ggm_embeded' => array(
+                'DataType' => 'Text',
+                'Caption' => array('en-US' => 'Google Map Embeded', 'vi-VN' => 'Mã nhúng Google Map'),
+                'Description' => array(
+                    'vi-VN' => 'Mã nhúng Google dạng iFrame',
+                ),
+            ),
         ));
         $obj['id']['Description'] = array(
-            'vi-VN' => sprintf('Mã SP quản lý trong hệ thống, không hiển thị trên Web<br>Muốn hiển thị mã trên Web, dùng Field \'%s\'', $obj['code']['Caption']['vi-VN'])
+            'vi-VN' => sprintf('Mã BDS quản lý trong hệ thống, không hiển thị trên Web<br>Muốn hiển thị mã trên Web, dùng Field \'%s\'', $obj['code']['Caption']['vi-VN'])
         );
-        $obj['__sys_lines_url']['Caption'] = array('en-US' => 'Related Products', 'vi-VN' => 'SP liên kết');
+        $obj['__sys_lines_url']['Caption'] = array('en-US' => 'Related Products', 'vi-VN' => 'BDS liên kết');
         $obj['__sys_lines_url']['TableRelation'] = array(
             'Table' => 'QdPro2Pro',
             'Field' => 'id',
@@ -321,10 +327,10 @@ class QdProduct extends QdRoot
 
     public function getPermalink()
     {
-        /*$query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/product-detail.php'));
-        $query = add_query_arg(array('id' => $this->id), $query);*/
+        $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/bds-detail.php'));
+        $query = add_query_arg(array('id' => $this->id), $query);
 
-        $query = site_url(sprintf('%s/%s.html', Qdmvc_Helper::sanitize_title_with_dashes($this->name), $this->id));
+        //$query = site_url(sprintf('%s/%s.html', Qdmvc_Helper::sanitize_title_with_dashes($this->name), $this->id));
         return $query;
     }
 
@@ -388,26 +394,27 @@ class QdProduct extends QdRoot
             }
         }
     }
-    /*
+
     protected function avatarOnValidate($field_name)
     {
         if ($this->$field_name == '') {
-            //$pro_setup = QdSetupProduct::GET();
-            //$this->$field_name = $pro_setup->df_pro_avatar;
-            //$this->pushValidateError($field_name, 'Tự động gán Avatar mặc định cho Product', 'info');
             $this->pushValidateError($field_name, 'Hình đại diện bắt buộc phải nhập', 'error');
         }
     }
-    protected function descriptionOnValidate($field_name){
-        if ($this->$field_name == '') {
-            $this->pushValidateError($field_name, 'Mô tả bắt buộc phải nhập', 'error');
-        }
-    }
-    */
+
 
     public static function getInitObj()
     {
         $obj = new QdProduct();
+        //get default tpl
+        $tpl = QdSetupOther::GET();
+        if($tpl!=null && $tpl->thongtinlh_tpl!=''){
+            $tpl2 = QdTemplate::GET($tpl->thongtinlh_tpl);
+            if($tpl2!=null && $tpl2->content!=''){
+                $obj->thongtinlh = $tpl2->content;
+            }
+        }
+        $obj->struct_lv_1 = QdProductCat::$LV1_BAN;
         return $obj;
     }
 
@@ -477,7 +484,16 @@ class QdProduct extends QdRoot
         }
         return parent::CALCFIELDS($flowfield_name);
     }
+    public function fn_remove_ggm_embeded($location, $params)
+    {
+        if (!$this->checkPermission(__FUNCTION__)) return false;
 
+        $this->ggm_embeded = '';
+        $this->save(true, $location . '|' . $this->getCalledClassName() . '|fn_remove_ggm_embeded');
+        $this->pushValidateError('ggm_embeded', 'Gỡ Google Map thành công', 'info');
+
+        return true;
+    }
     public function fn_validate_all_struct_level($location, $params)
     {
         $tmp = new QdProduct();

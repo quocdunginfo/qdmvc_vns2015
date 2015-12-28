@@ -34,23 +34,9 @@ class Qdmvc_Page_Product_Card extends Qdmvc_Page_Root
                     '_product_cat_name' => array(
                         'Order' => 50,
                     ),
-                    'code' => array(
-                        'Order' => 90,
-                    ),
                     'price' => array(
                         'Order' => 100,
                     ),
-                    /*
-                    'discount_percent' => array(
-                        'Order' => 110,
-                    ),
-                    'manual_discount_amt' => array(
-                        'Order' => 115,
-                    ),
-                    '_price_discount' => array(
-                        'Order' => 120,
-                    ),
-                    */
                     'active' => array(
                         'Order' => 130,
                     ),
@@ -69,7 +55,7 @@ class Qdmvc_Page_Product_Card extends Qdmvc_Page_Root
                         'Order' => 600,
                     ),
                     'phaply' => array(
-                        'Order' => 700,
+                        'Order' => 800,
                     ),
                 )
             ),
@@ -82,16 +68,22 @@ class Qdmvc_Page_Product_Card extends Qdmvc_Page_Root
                 ),
                 'Fields' => array(
                     'avatar' => array(
-                        'Order' => 15,
+                        'Order' => 100,
                     ),
                     '_avatar_preview' => array(
-                        'Order' => 10,
+                        'Order' => 200,
                     ),
                     'description' => array(
-                        'Order' => 20,
+                        'Order' => 300,
+                    ),
+                    'thongtinlh' => array(
+                        'Order' => 400,
+                    ),
+                    'ggm_embeded' => array(
+                        'Order' => 500,
                     ),
                     'date_modified' => array(
-                        'Order' => 50,
+                        'Order' => 600,
                     ),
                 )
             ),

@@ -4,7 +4,7 @@ class QdTemplate extends QdRoot
 {
     static $table_name = 'mpd_template';
     public static $TYPE_ = '';
-    public static $TYPE_PBH = 'PBH';
+    public static $TYPE_BDS = 'BDS';
 
     public static function getFieldsConfig()
     {
@@ -19,8 +19,8 @@ class QdTemplate extends QdRoot
                     static::$TYPE_ => array(
                         'Caption' => array('en-US' => 'Default', 'vi-VN' => 'Mặc định'),
                     ),
-                    static::$TYPE_PBH => array(
-                        'Caption' => array('en-US' => 'Warranty', 'vi-VN' => 'Phiếu bảo hành'),
+                    static::$TYPE_BDS => array(
+                        'Caption' => array('en-US' => 'Real Estate', 'vi-VN' => 'Bất động sản'),
                     ),
                 )
             ),
@@ -35,7 +35,7 @@ class QdTemplate extends QdRoot
     public static function getInitObj()
     {
         $obj = new QdTemplate();
-        $obj->type = static::$TYPE_;
+        $obj->type = static::$TYPE_BDS;
         return $obj;
     }
 }

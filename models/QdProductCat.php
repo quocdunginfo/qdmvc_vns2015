@@ -125,7 +125,19 @@ class QdProductCat extends QdRoot
                 'Name' => '_permalink_search_page_struct_lv2',
                 'DataType' => 'Text',
                 'FieldClass' => 'FlowField',
-            )
+            ),
+            'longitude' => array(
+                'Caption' => array('en-US' => 'Longitude', 'vi-VN' => 'Kinh độ'),
+                'DataType' => 'Decimal',
+                'Description' => 'Dùng để hiển thị trên Google Map',
+                'FieldClass' => 'Normal',
+            ),
+            'latitude' => array(
+                'Caption' => array('en-US' => 'Latitude', 'vi-VN' => 'Vĩ độ'),
+                'DataType' => 'Decimal',
+                'Description' => 'Dùng để hiển thị trên Google Map',
+                'FieldClass' => 'Normal',
+            ),
         ));
         $obj['__sys_lines_url']['TableRelation'] = array(
             'Table' => 'QdProduct',

@@ -7,11 +7,30 @@ class QdSetupOther extends QdRootSetup
     public static function getFieldsConfig()
     {
         return array_merge(parent::getFieldsConfig(), array(
-            'pbhanh_tpl' => array(
-                'DataType' => 'WYSIWYG',
+            'thongtinlh_tpl' => array(
+                'DataType' => 'Code',
+                'Caption' => array('en-US' => 'Conntact Info Tpl', 'vi-VN' => 'Thông tin LH Tpl'),
                 'Description' => array(
-                    'vi-VN' => 'Định nghĩa mẫu HTML cho bản in A5 của Phiếu Bảo Hành',
+                    'vi-VN' => 'Định nghĩa mẫu HTML cho Field \'Thông tin liên hệ\' của Bất động sản',
                 ),
+                'FieldClass' => 'Normal',//'FlowField'
+                'TableRelation' => array(
+                    'Table' => 'QdTemplate',
+                    'Field' => 'id',
+                    'TableFilter' => array(
+                        array(
+                            'Condition' => array(
+                                'Field' => '',
+                                'Type' => 'CONST',//'FIELD'
+                                'Value' => ''
+                            ),
+                            'Field' => 'type',
+                            'Type' => 'CONST',
+                            'Value' => QdTemplate::$TYPE_BDS
+                        )
+                    )
+                ),
+                'DataPort' => 'setup_other_port'
             ),
         ));
     }
