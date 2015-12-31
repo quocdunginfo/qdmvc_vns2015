@@ -116,16 +116,6 @@ class QdProductCat extends QdRoot
                 'DataType' => 'Text',
                 'FieldClass' => 'FlowField',
             ),
-            '_permalink_search_page_struct_lv1' => array(
-                'Name' => '_permalink_search_page_struct_lv1',
-                'DataType' => 'Text',
-                'FieldClass' => 'FlowField',
-            ),
-            '_permalink_search_page_struct_lv2' => array(
-                'Name' => '_permalink_search_page_struct_lv2',
-                'DataType' => 'Text',
-                'FieldClass' => 'FlowField',
-            ),
             'longitude' => array(
                 'Caption' => array('en-US' => 'Longitude', 'vi-VN' => 'Kinh độ'),
                 'DataType' => 'Decimal',
@@ -167,10 +157,13 @@ class QdProductCat extends QdRoot
         return $obj;
     }
 
-    public function getPermalink()
+    public function getPermalink($appedned_query=false)
     {
         $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/product-search.php'));
         $query = add_query_arg(array('loc-id' => $this->id), $query);
+        if(is_array($appedned_query) && !empty($appedned_query)){
+            $query = add_query_arg($appedned_query, $query);
+        }
         return $query;
         /*
         $query =  get_site_url();
@@ -302,17 +295,10 @@ class QdProductCat extends QdRoot
         return true;
     }
 
-    protected static function getPermalinkSearchPageStructLv1($struct_id)
+    public static function getPermalinkSearchPageStruct($struct_id)
     {
-        $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/product-search.php'));
-        $query = add_query_arg(array('product-cat-id' => $struct_id), $query);
-        return $query;
-    }
-
-    protected static function getPermalinkSearchPageStructLv2($struct_id)
-    {
-        $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/product-search.php'));
-        $query = add_query_arg(array('product-cat-id' => $struct_id), $query);
+        $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/bds-list.php'));
+        $query = add_query_arg(array('struct-id' => $struct_id), $query);
         return $query;
     }
 
@@ -320,14 +306,6 @@ class QdProductCat extends QdRoot
     {
         if ($flowfield_name == '_permalink') {
             $this->qd_cached_attr[$flowfield_name] = $this->getPermalink();
-            //return
-            return $this->qd_cached_attr[$flowfield_name];
-        } else if ($flowfield_name == '_permalink_search_page_struct_lv1') {
-            $this->qd_cached_attr[$flowfield_name] = static::getPermalinkSearchPageStructLv1($this->struct_lv_1);
-            //return
-            return $this->qd_cached_attr[$flowfield_name];
-        } else if ($flowfield_name == '_permalink_search_page_struct_lv2') {
-            $this->qd_cached_attr[$flowfield_name] = static::getPermalinkSearchPageStructLv2($this->struct_lv_2);
             //return
             return $this->qd_cached_attr[$flowfield_name];
         }

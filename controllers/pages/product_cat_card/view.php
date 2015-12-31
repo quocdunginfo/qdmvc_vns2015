@@ -14,31 +14,18 @@ class Qdmvc_View_ProductCat_Card extends Qdmvc_Layout_CardNavigate
     {
         $obj = parent::serverFunctions();
         $obj = array_merge($obj, array(
+            /*
             'btn_validate_all_level' => array(
                 'fn_name' => 'fn_validate_all_level',
                 'label' => array(
                     'vi-VN' => 'Validate lại Level',
                     'en-US' => 'Validate all Level'
                 )
-            ),
-            'btn_view_fe_searchpage_lv1' => array(
-                //'fn_name' => 'btn_view_in_frontend',
-                'label' => array(
-                    'vi-VN' => 'Mở trang SP Struct Lv1',
-                    'en-US' => 'Open Front-End Lv1 Page'
-                )
-            ),
-            'btn_view_fe_searchpage_lv2' => array(
-                //'fn_name' => 'btn_view_in_frontend',
-                'label' => array(
-                    'vi-VN' => 'Mở trang SP Struct Lv2',
-                    'en-US' => 'Open Front-End Lv2 Page'
-                )
-            ),
+            ),*/
             'btn_view_in_frontend' => array(
                 //'fn_name' => 'btn_view_in_frontend',
                 'label' => array(
-                    'vi-VN' => 'Mở trang SP Struct Lv3',
+                    'vi-VN' => 'Mở trang BDS List',
                     'en-US' => 'Open Front-End Lv3 Page'
                 )
             ),
@@ -65,21 +52,6 @@ class Qdmvc_View_ProductCat_Card extends Qdmvc_Layout_CardNavigate
                 $(document).ready(function () {
                     $('#btn_view_in_frontend').click(function () {
                         MYAPP.openInNewTab(MYAPP.viewModel._permalink());
-                    });
-                    $('#btn_view_fe_searchpage_lv1').click(function () {
-                        MYAPP.openInNewTab(MYAPP.viewModel._permalink_search_page_struct_lv1());
-                    });
-                    $('#btn_view_fe_searchpage_lv2').click(function () {
-                        MYAPP.openInNewTab(MYAPP.viewModel._permalink_search_page_struct_lv2());
-                    });
-                    //register button
-                    $("#qdmanufactors").bind("click", function (event) {
-                        if(MYAPP.viewModel.level() == 2) {
-                            MYAPP.requestLookupWindow(MYAPP.getObj()['__sys_link_manufactors_url']);
-                        }
-                        else{
-                            alert('Loại SP với level 2 mới được định nghĩa Hãng SX liên kết');
-                        }
                     });
                 });
             })(jQuery);
