@@ -29,6 +29,9 @@ class Qdmvc_Page_ProductCat_Card extends Qdmvc_Page_Root
                         'Order' => 100,
                         'ReadOnly' => false,
                     ),
+                    'slug_id' => array(
+                        'Order' => 150,
+                    ),
                     'type' => array(
                         'Order' => 200,
                         'Hidden' => true

@@ -51,6 +51,9 @@ class QdProductCat extends QdRoot
             'order' => array(
                 'Caption' => array('vi-VN' => 'Thứ tự'),
             ),
+            'slug_id' => array(
+                'Caption' => array('vi-VN' => 'Slug ID'),
+            ),
             'level' => array(
                 'DataType' => 'Integer',
                 'ReadOnly' => true
@@ -159,12 +162,21 @@ class QdProductCat extends QdRoot
 
     public function getPermalink($appedned_query=false)
     {
-        $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/product-search.php'));
-        $query = add_query_arg(array('loc-id' => $this->id), $query);
-        if(is_array($appedned_query) && !empty($appedned_query)){
-            $query = add_query_arg($appedned_query, $query);
+        //$query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/product-search.php'));
+        //$query = add_query_arg(array('loc-id' => $this->id), $query);
+        //if(is_array($appedned_query) && !empty($appedned_query)){
+        //    $query = add_query_arg($appedned_query, $query);
+        //}
+        $tmp = '';
+        if($appedned_query['struct-id']==static::$LV1_BAN){
+            $tmp .= 'nha-ban';
+        }else if($appedned_query['struct-id']==static::$LV1_CHOTHUE){
+            $tmp .= 'nha-cho-thue';
         }
-        return $query;
+
+        $tmp .= '/' . $this->slug_id . '.html';
+
+        return get_site_url(null,$tmp);
         /*
         $query =  get_site_url();
         $query .= sprintf('/loaisp/%s/%s', $this->id, Qdmvc_Helper::sanitize_title_with_dashes($this->name));
@@ -297,9 +309,16 @@ class QdProductCat extends QdRoot
 
     public static function getPermalinkSearchPageStruct($struct_id)
     {
-        $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/bds-list.php'));
-        $query = add_query_arg(array('struct-id' => $struct_id), $query);
-        return $query;
+        //$query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/bds-list.php'));
+        //$query = add_query_arg(array('struct-id' => $struct_id), $query);
+        //return $query;
+        $tmp = '';
+        if($struct_id==static::$LV1_BAN){
+            $tmp = 'nha-ban.html';
+        }else if($struct_id==static::$LV1_CHOTHUE){
+            $tmp = 'nha-cho-thue.html';
+        }
+        return get_home_url(null,$tmp);
     }
 
     protected function CALCFIELDS($flowfield_name)
