@@ -327,11 +327,14 @@ class QdProduct extends QdRoot
 
     public function getPermalink()
     {
-        $query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/bds-detail.php'));
-        $query = add_query_arg(array('id' => $this->id), $query);
+        //$query = get_permalink(Qdmvc_Helper::getPageIdByTemplate('page-templates/bds-detail.php'));
+        //$query = add_query_arg(array('id' => $this->id), $query);
 
         //$query = site_url(sprintf('%s/%s.html', Qdmvc_Helper::sanitize_title_with_dashes($this->name), $this->id));
-        return $query;
+        //return $query;
+
+        $tmp = site_url(sprintf('%s/%s.html', Qdmvc_Helper::sanitize_title_with_dashes($this->name), $this->id));
+        return $tmp;
     }
 
     public function getBreadcrumbs()
