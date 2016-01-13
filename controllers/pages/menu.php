@@ -20,16 +20,16 @@ class Qdmvc_Page_IndexMenu
                 'PageType' => 'Folder',
                 'Active' => true,
                 'Caption' => array(
-                    'vi-VN' => 'Sản phẩm',
+                    'vi-VN' => 'Bất động sản',
                     'en-US' => 'Product'
                 )
             ),
             'folder20' => array(
                 'ParentId' => -1,
                 'PageType' => 'Folder',
-                'Active' => true,
+                'Active' => false,
                 'Caption' => array(
-                    'vi-VN' => 'Loại sản phẩm',
+                    'vi-VN' => 'Vị trí - BDS',
                     'en-US' => 'Product Category'
                 )
             ),
@@ -88,13 +88,13 @@ class Qdmvc_Page_IndexMenu
             ),
 
             'product_cat_card' => array(
-                'ParentId' => 'folder20',
+                'ParentId' => 'folder10',
                 'Active' => true,
                 'PageType' => 'Card',
                 'Class' => 'Qdmvc_Page_ProductCat_Card',
                 'Caption' => array(
                     'en-US' => 'Product Category (All)',
-                    'vi-VN' => 'LSP (Tất cả)',
+                    'vi-VN' => 'Vị trí BDS (Tất cả)',
                 ),
                 'Model' => 'QdProductCat',
                 'DataPort' => 'product_cat_port',
@@ -575,7 +575,7 @@ class Qdmvc_Page_IndexMenu
             ),
             'bestchoiceitem_card' => array(
                 'ParentId' => 'bestchoicecat_card',
-                'Active' => true,
+                'Active' => false,
                 'PageType' => 'Card',
                 'Class' => 'Qdmvc_Page_BestChoiceItem',
                 'Caption' => array(
@@ -600,7 +600,7 @@ class Qdmvc_Page_IndexMenu
             ),
             'bestchoicecat_card' => array(
                 'ParentId' => 'folder110',
-                'Active' => true,
+                'Active' => false,
                 'PageType' => 'Card',
                 'Class' => 'Qdmvc_Page_BestChoiceCat',
                 'Caption' => array(
@@ -625,7 +625,7 @@ class Qdmvc_Page_IndexMenu
             ),
             'postcat_card' => array(
                 'ParentId' => 'folder80',
-                'Active' => true,
+                'Active' => false,
                 'PageType' => 'Card',
                 'Class' => 'Qdmvc_Page_PostCat',
                 'Caption' => array(
@@ -675,7 +675,7 @@ class Qdmvc_Page_IndexMenu
             ),
             'widgetnavcat' => array(
                 'ParentId' => 'folder110',
-                'Active' => true,
+                'Active' => false,
                 'PageType' => 'Card',
                 'Class' => 'Qdmvc_Page_WidgetNavCat',
                 'Caption' => array(
@@ -700,7 +700,7 @@ class Qdmvc_Page_IndexMenu
             ),
             'partnergrp' => array(
                 'ParentId' => 'folder110',
-                'Active' => true,
+                'Active' => false,
                 'PageType' => 'Card',
                 'Class' => 'Qdmvc_Page_PartnerGrp',
                 'Caption' => array(
@@ -750,7 +750,7 @@ class Qdmvc_Page_IndexMenu
             ),
             'widgetnav' => array(
                 'ParentId' => 'widgetnavcat',
-                'Active' => true,
+                'Active' => false,
                 'PageType' => 'Card',
                 'Class' => 'Qdmvc_Page_WidgetNav',
                 'Caption' => array(
@@ -1125,7 +1125,7 @@ class Qdmvc_Page_IndexMenu
                 'Class' => 'Qdmvc_Page_Product_Card',
                 'Caption' => array(
                     'en-US' => 'Product (All)',
-                    'vi-VN' => 'SP (Tất cả)',
+                    'vi-VN' => 'Bất động sản (Tất cả)',
                 ),
                 'Model' => 'QdProduct',
                 'DataPort' => 'product_port',

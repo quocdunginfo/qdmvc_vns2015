@@ -53,6 +53,7 @@ class QdProductCat extends QdRoot
             ),
             'slug_id' => array(
                 'Caption' => array('vi-VN' => 'Slug ID'),
+                'Description' => 'URL SEO khi tìm kiếm theo khu vực.<br>Vd: http://domain/nha-ban/quan-binh-thanh.html',
             ),
             'level' => array(
                 'DataType' => 'Integer',
@@ -349,5 +350,12 @@ class QdProductCat extends QdRoot
         );
     }
 
+    protected function slug_idOnValidate($field_name)
+    {
+        if($this->$field_name == '' && $this->name!=''){
+            $this->$field_name = Qdmvc_Helper::sanitize_title_with_dashes($this->name);
+            $this->pushValidateError($field_name, 'Slug ID tự động lấy từ Name', 'info');
+        }
+    }
 
 }
