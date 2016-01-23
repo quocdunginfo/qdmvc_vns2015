@@ -3,23 +3,8 @@
 Plugin Name: qdmvc
 */
 
-//Because Helper is declared outside to public provider for other location use (theme)
-//Router and helper does not using Model so it could be loaded 1st
-Qdmvc::loadHelper('main');
-Qdmvc::loadRouter();
-//Model must load public to ensure other location usage
-Qdmvc::loadModel();
-
 class Qdmvc
 {
-    private static $included_file = array(
-        'native/register-admin-menu',
-        'native/page-meta-box',
-        'native/db-init',
-        'native/shortcode',
-        'native/menu-nav-provider',
-        'notification/index',
-    );
     //dependency plugins
     private static $dependencies = array('phpactiverecords', 'jqwidgets');
 
@@ -27,22 +12,6 @@ class Qdmvc
     function __construct()
     {
 
-    }
-
-    private static function init()
-    {
-        //require related library
-        foreach (static::$included_file as $item) {
-            static::load($item);
-        }
-        //loading widgets
-        require_once(Qdmvc::getWidget('index.php'));
-    }
-
-    public static function loadJS()
-    {
-        wp_register_script('qdmvc_js_msg-' . Qdmvc_Config::getLanguage(), plugins_url('/messages/js/msg-' . Qdmvc_Config::getLanguage() . '.js', __FILE__));
-        wp_enqueue_script('qdmvc_js_msg-' . Qdmvc_Config::getLanguage());
     }
 
     public static function loadNative($pure_path)
@@ -77,6 +46,7 @@ class Qdmvc
         }
         ob_start();
         */
+
         //MAIN fn: load class
         static::loadPage($name);
         //load controller
@@ -115,9 +85,9 @@ class Qdmvc
         require_once(static::getController('dataports/' . $pure_path . '/class.php'));
     }
 
-    public static function loadIndex($pure_path)
+    public static function loadIndex($pure_path, $require=true)
     {
-        require_once(static::getPluginDir($pure_path) . '.php');
+        static::load($pure_path, $require);
     }
 
     public static function getPluginDir($pure_path = '')
@@ -130,7 +100,7 @@ class Qdmvc
      */
 
 
-    protected static function getWidget($path = '')
+    public static function getWidget($path = '')
     {
         return Qdmvc::getPluginDir('widgets/' . $path);
     }
@@ -166,17 +136,29 @@ class Qdmvc
                 return;
             }
         }
-        //2nd level construct
-        static::init();
+
+        //require global index
+        //Index must be loaded before Model
+        //Reason: QdRoot->getDefaultLookupPage
+        Qdmvc::loadIndex('index');
+
+        //Script and CSS
+        if(is_admin()) {
+            if (Qdmvc::IS_QDMVC_PAGE()) {
+                //register all jqwidget
+                QdJqwidgets::registerAll();
+                //load all jqwidget
+                QdJqwidgets::loadAll();
+            }
+        }
+
+        //load phpActiveRecord Model
+        Qdmvc::loadModel();
     }
 
     public static function loadModel()
     {
-        //Index must be loaded before Model
-        //Reason: QdRoot->getDefaultLookupPage
-        Qdmvc::loadIndex('index');//quocdunginfo, performance
-
-        //Phpactive record init
+        //phpActiveRecord init
         static::$connection = QdPhpactiverecords::getCon();
         $tmp_con = static::$connection;
         ActiveRecord\Config::initialize(function ($cfg) use ($tmp_con) {
@@ -192,14 +174,13 @@ class Qdmvc
         return static::$connection;
     }
 
-    public static function load($pure_path)
+    public static function load($pure_path, $require=true)
     {
-        require_once(Qdmvc::getPluginDir($pure_path) . '.php');
-    }
-
-    public static function loadRouter()
-    {
-        static::load('native/router');
+        if($require) {
+            require_once(Qdmvc::getPluginDir($pure_path) . '.php');
+        }else{
+            include_once(Qdmvc::getPluginDir($pure_path) . '.php');
+        }
     }
 
     public static function IS_QDMVC_PAGE()
@@ -211,13 +192,107 @@ class Qdmvc
     {
         return plugins_url($r_path, __FILE__);
     }
-}
+    public static function extractQdmvcCoreFiles(){
+        $folders = array(
+            //FW: dataports
+            Qdmvc::getPluginDir('controllers/dataports/root') => '_core_pkg/controllers/dataports/root',
 
-if (is_admin()) {
-    Qdmvc::run();
+            //FW: pages
+            Qdmvc::getPluginDir('controllers/pages/root') => '_core_pkg/controllers/pages/root',
+            Qdmvc::getPluginDir('controllers/pages/root_list') => '_core_pkg/controllers/pages/root_list',
+            Qdmvc::getPluginDir('controllers/pages/root_setup') => '_core_pkg/controllers/pages/root_setup',
 
-    //load UI Kit
-    if (Qdmvc::IS_QDMVC_PAGE()) {
-        QdJqwidgets::registerResource(true);//quocdunginfo, need to find other solution because every WP page got this hook
+            //app cores
+            Qdmvc::getPluginDir('controllers/pages/user') => '_core_pkg/controllers/pages/user',
+            Qdmvc::getPluginDir('controllers/pages/user_list') => '_core_pkg/controllers/pages/user_list',
+            //............
+
+            //helper
+            Qdmvc::getPluginDir('helpers') => '_core_pkg/helpers',
+
+            //views
+            Qdmvc::getPluginDir('views') => '_core_pkg/views',
+
+            //widget
+            Qdmvc::getPluginDir('widgets') => '_core_pkg/widgets',
+        );
+        $coreFiles = array(
+            //FW
+            Qdmvc::getPluginDir('index.php') => '_core_pkg',
+            Qdmvc::getPluginDir('qdmvc.php') => '_core_pkg',
+
+            //app core models
+            Qdmvc::getPluginDir('models/QdRoot.php') => '_core_pkg/models',
+            Qdmvc::getPluginDir('models/QdRootReport.php') => '_core_pkg/models',
+            Qdmvc::getPluginDir('models/QdRootSetup.php') => '_core_pkg/models',
+            Qdmvc::getPluginDir('models/QdUser.php') => '_core_pkg/models',
+
+            //FW page
+            Qdmvc::getPluginDir('controllers/pages/index.php') => '_core_pkg/controllers/pages',
+
+            //FW menus
+            Qdmvc::getPluginDir('controllers/menus/index.php') => '_core_pkg/controllers/menus',
+
+            //FW dataports
+            Qdmvc::getPluginDir('controllers/dataports/index.php') => '_core_pkg/controllers/dataports',
+
+            //FW Controller
+            Qdmvc::getPluginDir('controllers/index.php') => '_core_pkg/controllers',
+
+            //WP native
+            Qdmvc::getPluginDir('native/index.php') => '_core_pkg/native',
+            Qdmvc::getPluginDir('native/router.php') => '_core_pkg/native',
+            Qdmvc::getPluginDir('native/register-admin-menu.php') => '_core_pkg/native',
+            Qdmvc::getPluginDir('native/register-hook.php') => '_core_pkg/native',
+            Qdmvc::getPluginDir('native/db-init.php') => '_core_pkg/native',
+
+            //messages
+            Qdmvc::getPluginDir('messages/index.php') => '_core_pkg/messages',
+            Qdmvc::getPluginDir('messages/global.php') => '_core_pkg/messages',
+        );
+
+
+        $zip = new ZipArchive();
+        $zipPath = Qdmvc::getPluginDir("_core_pkg.zip");
+
+        $report = '';
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE)===TRUE) {
+            foreach($folders as $rootPath => $rp) {
+
+                $files = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($rootPath),
+                    RecursiveIteratorIterator::LEAVES_ONLY
+                );
+
+                foreach ($files as $name => $file) {
+                    // Skip directories (they would be added automatically)
+                    if (!$file->isDir()) {
+                        // Get real and relative path for current file
+                        $filePath = $file->getRealPath();
+                        $relativePath = $rp . '/' . substr($filePath, strlen($rootPath) + 1);
+
+                        // Add current file to archive
+                        $zip->addFile($filePath, $relativePath);
+                        $report .= $filePath . ' => '.$relativePath.'<br>';
+                    }
+                }
+            }
+            foreach($coreFiles as $file=>$rp){
+                // Skip directories (they would be added automatically)
+                if (!is_dir($file)) {
+                    $rootPath = dirname($file);
+                    // Get real and relative path for current file
+                    $relativePath = $rp . '/' . substr($file, strlen($rootPath) + 1);
+
+                    // Add current file to archive
+                    $zip->addFile($file, $relativePath);
+                    $report .= $file . ' => '.$relativePath.'<br>';
+                }
+            }
+            $zip->close();
+        }
+        return $report;
     }
 }
+
+Qdmvc::run();

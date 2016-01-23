@@ -15,24 +15,7 @@ class Qdmvc_Page_IndexMenu
     private static function getMenuFolder(){
         return array(
             /*Folder*/
-            'folder10' => array(
-                'ParentId' => -1,
-                'PageType' => 'Folder',
-                'Active' => true,
-                'Caption' => array(
-                    'vi-VN' => 'Bất động sản',
-                    'en-US' => 'Product'
-                )
-            ),
-            'folder20' => array(
-                'ParentId' => -1,
-                'PageType' => 'Folder',
-                'Active' => false,
-                'Caption' => array(
-                    'vi-VN' => 'Vị trí - BDS',
-                    'en-US' => 'Product Category'
-                )
-            ),
+
             'folder50' => array(
                 'ParentId' => -1,
                 'PageType' => 'Folder',
@@ -112,42 +95,7 @@ class Qdmvc_Page_IndexMenu
                 'Model' => 'QdProductCat',
                 'DataPort' => 'product_cat_port'
             ),
-            'setup_other' => array(
-                'ParentId' => 'folder50',
-                'Active' => true,
-                'PageType' => 'Card',
-                'Class' => 'Qdmvc_Page_SetupOther',
-                'Caption' => array(
-                    'en-US' => 'Other Setup',
-                    'vi-VN' => 'Cấu hình khác',
-                ),
-                'Model' => 'QdSetupOther',
-                'DataPort' => 'setup_other_port'
-            ),
-            'theme_root_setup' => array(
-                'ParentId' => 'folder50',
-                'Active' => true,
-                'PageType' => 'Card',
-                'Class' => 'Qdmvc_Page_TRootSetup',
-                'Caption' => array(
-                    'en-US' => 'Theme Root Setup',
-                    'vi-VN' => 'Theme Root Setup',
-                ),
-                'Model' => 'QdTRootSetup',
-                'DataPort' => 'theme/root_setup_port'
-            ),
-            'theme_root_setup_mobile' => array(
-                'ParentId' => 'theme_root_setup',
-                'Active' => true,
-                'PageType' => 'Card',
-                'Class' => 'Qdmvc_Page_TRootSetupMobile',
-                'Caption' => array(
-                    'en-US' => 'Theme Root Setup (Mobile)',
-                    'vi-VN' => 'Theme Root Setup (Mobile)',
-                ),
-                'Model' => 'QdTRootSetupMobile',
-                'DataPort' => 'theme/root_setup_mobile_port'
-            ),
+
             'user_personalization' => array(
                 'ParentId' => 'folder50',
                 'Active' => true,
@@ -1118,31 +1066,7 @@ class Qdmvc_Page_IndexMenu
     }
     public static function getProductMenu(){
         return array(
-            'product' => array(
-                'ParentId' => 'folder10',
-                'Active' => true,
-                'PageType' => 'Card',
-                'Class' => 'Qdmvc_Page_Product_Card',
-                'Caption' => array(
-                    'en-US' => 'Product (All)',
-                    'vi-VN' => 'Bất động sản (Tất cả)',
-                ),
-                'Model' => 'QdProduct',
-                'DataPort' => 'product_port',
-                'PageList' => 'product_list'
-            ),
-            'product_list' => array(
-                'ParentId' => -1,
-                'Active' => false,
-                'PageType' => 'List',
-                'Class' => 'Qdmvc_Page_Product_List',
-                'Caption' => array(
-                    'en-US' => 'Product List',
-                    'vi-VN' => 'Product List'
-                ),
-                'Model' => 'QdProduct',
-                'DataPort' => 'product_port'
-            ),
+
         );
     }
 }

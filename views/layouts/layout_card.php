@@ -55,13 +55,7 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
 
                 })(jQuery);
             };
-            MYAPP.showModalDialog = function (title, content) {
-                (function ($) {
-                    $('#qdMsgModalTitle').html(title);
-                    $('#qdMsgModalContent').html(content);
-                    $('#qdMsgModal').modal('show');
-                })(jQuery);
-            };
+
             MYAPP.AllError = [];
             MYAPP.showMsgHistory = function (limit) {
                 if (limit == undefined) {
@@ -343,44 +337,50 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
                 });
                 MYAPP.WPEditor = {};
                 MYAPP.WPEditor.resize = function (width, height) {
-                    if (wptexteditor_ifr != undefined) {
-                        if (height != undefined) {
-                            wptexteditor_ifr.style.height = (height) + 'px';//quocdunginfo
+                    (function ($) {
+                        var editorWindows = $('#wptexteditor_ifr');
+                        if(editorWindows.length > 0){
+                            if (height != undefined) {
+                                wptexteditor_ifr.style.height = (height) + 'px';//quocdunginfo
+                            }
+                            if (width != undefined) {
+                                wptexteditor_ifr.style.width = (width) + 'px';//quocdunginfo
+                            }
                         }
-                        if (width != undefined) {
-                            wptexteditor_ifr.style.width = (width) + 'px';//quocdunginfo
+                        //Text mode (HTMl only)
+                        else {
+                            editorWindows = $('#wptexteditor');
+                            if(editorWindows.length > 0){
+                                if (height != undefined) {
+                                    wptexteditor.style.height = (height) + 'px';//quocdunginfo
+                                }
+                                if (width != undefined) {
+                                    wptexteditor.style.width = (width) + 'px';//quocdunginfo
+                                }
+                            }else{
+                                console.log('ERROR: wptexteditor_ifr/wptexteditor is not defined in Text mode, could not auto resize');
+                            }
                         }
-                    }
-                    else {
-                        console.log('ERROR: wptexteditor_ifr is not defined');
-                    }
+                    })(jQuery);
+
                 };
                 MYAPP.WPEditor.setContent = function (initVal) {
-                    var ins = tinyMCE.get('wptexteditor');
-                    if (ins != undefined) {
-                        tinyMCE.get('wptexteditor').setContent(initVal);
+                    if(tinyMCE != undefined){
+                        var ins = tinyMCE.get('wptexteditor');
+                        var isVisual = (ins && !ins.isHidden());
+                        //Bug: TinyMCE, setContent not work in Text mode (HTML only)
+                        if(isVisual) {
+                            ins.setContent(initVal);
+                        }else{
+                            wptexteditor.value = initVal;
+                        }
+                    }else{
+                        console.log('ERROR: tinyMCE not found');
                     }
                 }
             })(jQuery);
         </script>
-        <!-- Modal -->
-        <div class="modal fade" id="qdMsgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="qdMsgModalTitle">Info</h4>
-                    </div>
-                    <div id="qdMsgModalContent" class="modal-body">
-                        [Not Set]
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div id="jqxlookupwin" style="display: none">
             <div id="windowHeader">
                     <span>
@@ -415,11 +415,24 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
                     (function ($) {
                         $(document).ready(function () {
                             $('#wptexteditor_done').click(function () {
-                                var content = tinyMCE.get('wptexteditor').getContent();
-                                $('#' + MYAPP.wptexteditor_returnid).val(content);
-                                $('#' + MYAPP.wptexteditor_returnid).trigger('change');
-                                //close editor
-                                $('#jqxwptexteditor').jqxWindow('close');
+                                if(tinyMCE != undefined){
+                                    var ins = tinyMCE.get('wptexteditor');
+                                    var isVisual = (ins && !ins.isHidden());
+                                    var content = '';
+                                    //Bug: TinyMCE, getContent not work in Text mode (HTML only)
+                                    if(isVisual) {
+                                        content = ins.getContent();
+                                    }else{
+                                        content = wptexteditor.value;
+                                    }
+                                    $('#' + MYAPP.wptexteditor_returnid).val(content);
+                                    $('#' + MYAPP.wptexteditor_returnid).trigger('change');
+                                    //close editor
+                                    $('#jqxwptexteditor').jqxWindow('close');
+                                }else{
+                                    console.log('ERROR: tinyMCE not found');
+                                }
+
                             });
                         });
                     })(jQuery);
@@ -525,6 +538,7 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
             MYAPP.setLookupResult = function (value, txtId) {
                 (function ($) {
                     eval('MYAPP.viewModel.' + txtId)(value);
+                    $('#ctl_'+txtId).trigger("change");
                     //auto close window
                     $('#jqxlookupwin').jqxWindow('close');
                 })(jQuery);
@@ -847,8 +861,10 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
         </select>
     <?php
     }
-
-    private function generateFieldImage($f_name, $value, $readonly = false)
+    private function generateFieldFile($f_name, $value, $readonly = false){
+        $this->generateFieldImage($f_name, $value, $readonly, false);
+    }
+    private function generateFieldImage($f_name, $value, $readonly = false, $onhover = true)
     {
         ?>
         <div class="qd-lookup-input">
@@ -865,16 +881,18 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
                             //event.preventDefault();
                             MYAPP.MediaSelector.open('media_cs_<?=$f_name?>', '<?=$f_name?>');
                         });
-                        //hover effect
-                        $("#<?=static::$ctl_prefix.$f_name?>").hover(function () {
-                            var imgURL = $(this).val();
-                            if (imgURL != "") {
-                                var content = '<img style="max-width: 150px; max-height: 150" src="' + imgURL + '" />';
-                                var selector = $("#<?=static::$ctl_prefix.$f_name?>");
-                                selector.jqxTooltip({content: content, position: 'bottom', opacity: 0.8});
-                                selector.jqxTooltip('open');
-                            }
-                        });
+                        <?php if($onhover): ?>
+                            //hover effect
+                            $("#<?=static::$ctl_prefix.$f_name?>").hover(function () {
+                                var imgURL = $(this).val();
+                                if (imgURL != "") {
+                                    var content = '<img style="max-width: 150px; max-height: 150" src="' + imgURL + '" />';
+                                    var selector = $("#<?=static::$ctl_prefix.$f_name?>");
+                                    selector.jqxTooltip({content: content, position: 'bottom', opacity: 0.8});
+                                    selector.jqxTooltip('open');
+                                }
+                            });
+                        <?php endif; ?>
                     });
                 })(jQuery);
             </script>
@@ -890,7 +908,6 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
             <img id='<?= static::$ctl_prefix . $f_name ?>'
                  data-bind="attr:{src: <?= $previewfield ?>}"/>
         </div>
-
     <?php
     }
 
@@ -1039,11 +1056,11 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
                                         continue;
                                     }
                                     ?>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6" id="combo_<?=$f_name?>">
                                         <!-- Caption -->
                                         <div
                                             data-qddesc="<?= $this->page->getFieldDescription($f_name, $this->data['language']) ?>"
-                                            class="qd-field-caption pull-left"><?= $this->page->getFieldCaption($f_name, $this->data['language']) ?>
+                                            class="qd-field-caption pull-left" id="lb_<?=$f_name?>"><?= $this->page->getFieldCaption($f_name, $this->data['language']) ?>
                                             :
                                         </div>
                                         <!-- END Caption -->
@@ -1055,6 +1072,8 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
                                                 $this->generateFieldBoolean($f_name, $f_val, $readonly);
                                             } else if ($type == 'Image') {
                                                 $this->generateFieldImage($f_name, $f_val, $readonly);
+                                            } else if ($type == 'File') {
+                                                $this->generateFieldFile($f_name, $f_val, $readonly);
                                             } else if ($type == 'ImagePreview') {
                                                 $this->generateFieldImagePreview($f_name, $f_val, $imagepreviewfield, $readonly);
                                             } else if ($type == 'Integer') {
@@ -1097,6 +1116,14 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
                         var title = $(this).text();
                         MYAPP.showModalDialog(title, content);
                     });
+                    $('.qd-image-preview img').click(function () {
+                        if(this.src != undefined) {
+                            MYAPP.showModalDialog('Image Preview', '<img style="max-height: 100%; max-width: 100%" src="' + this.src + '" />', true, true);
+                        }
+                    });
+                    $('#ctl_id').keyup(function () {
+                        MYAPP.manual_no = true;
+                    });
                 });
             })(jQuery);
         </script>
@@ -1113,10 +1140,6 @@ class Qdmvc_Layout_Card extends Qdmvc_Layout_Root
                     <?php if($this->page->hasLines()): ?>
                     $("#qdlines").show();
                     <?php endif; ?>
-
-                    $('#ctl_id').keyup(function () {
-                        MYAPP.manual_no = true;
-                    });
                 });
             })(jQuery);
         </script>
